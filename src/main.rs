@@ -1,4 +1,4 @@
 fn main() {
     println!("Hello, world!");
-    println!("Second line!");
+    xprintln!("Second line!");
 }
