@@ -70,7 +70,7 @@ jobs:
         with:
           args: '--verbose --all-features --ignore-tests --workspace --timeout 120 --out Xml'
         
-        name: Upload to codecov.io
+      - name: Upload to codecov.io
         uses: codecov/codecov-action@v1
         with:
           token: ${{secrets.CODECOV_TOKEN}}
