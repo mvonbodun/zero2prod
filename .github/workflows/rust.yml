@@ -68,4 +68,10 @@ jobs:
       - name: Run cargo-tarpaulin
         uses: actions-rs/tarpaulin@v0.1
         with:
-          args: '--ignore-tests'
+          args: '--verbose --all-features --ignore-tests --workspace --timeout 120 --out Xml'
+        
+        name: Upload to codecov.io
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{secrets.CODECOV_TOKEN}}
+          fail_ci_if_error: true
