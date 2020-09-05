@@ -73,6 +73,12 @@ jobs:
           toolchain: stable
           override: true
       - run: rustup component add clippy
+      - uses: actions-rs/install@v0.1
+        with:
+          crate: sqlx-cli
+          version: 0.1.0-beta.1
+      - run: sqlx database create
+      - run: sqlx migrate run
       - uses: actions-rs/cargo@v1
         with:
           command: clippy
