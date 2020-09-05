@@ -33,7 +33,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions-rs/install@v0.1
         with:
-          crate: sqlx_cli
+          crate: sqlx-cli
           version: latest
       - run: sqlx database create
       - run: sqlx migrate run
