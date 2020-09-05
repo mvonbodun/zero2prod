@@ -7,6 +7,7 @@ use zero2prod::startup::run;
 async fn main() -> std::io::Result<()> {
     // Read configuration
     let configuration = get_configuration().expect("Failed to read configuration");
+    // Create connection pool to pass to run method
     let connection = PgPool::connect(&configuration.database.connection_string())
         .await
         .expect("Failed to connect to postgres");
