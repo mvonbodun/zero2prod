@@ -1,8 +1,10 @@
 use actix_web::{web, HttpResponse};
+#[allow(unused_imports)]
 use chrono::Utc;
 use sqlx::PgPool;
 use std::ops::Deref;
 use std::sync::Arc;
+#[allow(unused_imports)]
 use uuid::Uuid;
 
 #[derive(serde::Deserialize)]
@@ -11,6 +13,7 @@ pub struct FormData {
     name: String,
 }
 
+// Subscribe to email
 pub async fn subscribe(
     form: web::Form<FormData>,
     connection: web::Data<Arc<PgPool>>,
