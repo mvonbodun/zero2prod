@@ -14,6 +14,7 @@ pub struct FormData {
 }
 
 // Subscribe to email
+#[allow(clippy::toplevel_ref_arg)]
 pub async fn subscribe(
     form: web::Form<FormData>,
     connection: web::Data<Arc<PgPool>>,
