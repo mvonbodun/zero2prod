@@ -31,17 +31,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions-rs/install@v0.1
-        with:
-          crate: sqlx-cli
-          version: latest
-      - run: sqlx database create
-      - run: sqlx migrate run
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
           toolchain: stable
           override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: --version=0.1.0-beta.1 sqlx-cli --no-default-features --features postgres
+      - run: sqlx database create
+      - run: sqlx migrate run
       - uses: actions-rs/cargo@v1
         with:
           command: test
