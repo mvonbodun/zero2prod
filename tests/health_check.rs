@@ -65,21 +65,20 @@ async fn spawn_app() -> TestApp {
 pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
     // Create database
     let maintenance_settings = DatabaseSettings {
-        database_name: "postgres".to_string(),
-        username: "postgres".to_string(),
-        password: SecretString::from("password"),
+        database_name: config.database_name.clone(),
+        username: config.username.clone(),
+        password: config.password.clone(),
         ..config.clone()
     };
-    let mut connection =
-        PgConnection::connect(maintenance_settings.connection_string().expose_secret())
-            .await
-            .expect("Failed to connect to Postgres");
+    let mut connection = PgConnection::connect_with(&maintenance_settings.connect_options())
+        .await
+        .expect("Failed to connect to Postgres");
     connection
         .execute(format!(r#"CREATE DATABASE "{}";"#, config.database_name).as_str())
         .await
         .expect("Failed to create database.");
     // Migrate database
-    let connection_pool = PgPool::connect(config.connection_string().expose_secret())
+    let connection_pool = PgPool::connect_with(maintenance_settings.connect_options())
         .await
         .expect("Failed to connect to Postgres.");
     sqlx::migrate!("./migrations")
@@ -90,7 +89,7 @@ pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
     connection_pool
 }
 
-use secrecy::{ExposeSecret, SecretString};
+use secrecy::SecretString;
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 use uuid::Uuid;
 use zero2prod::{
@@ -102,6 +101,10 @@ use zero2prod::{
 async fn subscribe_returns_a_200_for_valid_form_data() {
     // Arrange
     let app = spawn_app().await;
+    println!(
+        "subscribe returns 200 spawn_app() TestApp: {:?}",
+        app.db_pool
+    );
     let client = reqwest::Client::new();
 
     // Act
@@ -113,6 +116,8 @@ async fn subscribe_returns_a_200_for_valid_form_data() {
         .send()
         .await
         .expect("Failed to execute request");
+
+    println!("response from subscribe 200 test: {:?}", response);
 
     // Assert
     assert_eq!(200, response.status().as_u16());
